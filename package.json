@@ -18,12 +18,12 @@
     "url": "http://github.com/Gozala/stream-reduce/issues/"
   },
   "devDependencies": {
-    "test": ">=0.4.4",
+    "test": "~0.5.0",
     "repl-utils": ">=1.0.0"
   },
   "main": "./stream-reduce.js",
   "scripts": {
-    "test": "node test/test-all.js",
+    "test": "node test/index.js",
     "repl": "node node_modules/repl-utils"
   },
   "licenses": [
@@ -33,6 +33,6 @@
     }
   ],
   "dependencies": {
-    "reducers": "~0.1.0"
+    "reducers": "git://github.com/Gozala/reducers.git#experiment/future"
   }
 }
