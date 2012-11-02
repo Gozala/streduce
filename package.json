@@ -1,7 +1,7 @@
 {
   "name": "stream-reduce",
   "id": "stream-reduce",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Adapter for making node streams reducible",
   "keywords": [
     "stream", "reduce", "reducers", "map", "filter", "transform", "lazy",
