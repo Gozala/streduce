@@ -1,7 +1,3 @@
-/* vim:set ts=2 sw=2 sts=2 expandtab */
-/*jshint asi: true undef: true es5: true node: true devel: true
-         forin: true latedef: false globalstrict: true*/
-
 "use strict";
 
 var Stream = require("stream")
@@ -9,23 +5,33 @@ var accumulate = require("reducers/accumulate")
 var emit = require("reducers/emit")
 var close = require("reducers/close")
 var end = require("reducers/end")
-var accumulated = require("reducers/accumulated")
-var error = require("reducers/error")
+var isReduced = require("reducers/is-reduced")
 
 var accumulator = "accumulator@" + module.id
 var state = "state@" + module.id
 
 emit.define(Stream, function(stream, value) {
-  if (stream.writable === false) throw Error("Can't emit on nonwritable stream")
+  /**
+  Emits a new `value` on stream. If stream is no longer writable
+  return reduced to signal the source no value should be emitted.
+  **/
+  if (stream.writable === false) return reduced()
+  if (value === end) return close(stream)
   stream.emit("data", value)
   return stream
 })
 
 close.define(Stream, function(stream, value) {
+  /**
+  Close a `stream` preventing new values from being emitted.
+  Throws an exception if the signal is already closed.
+  **/
   if (value) stream.emit("data", value)
   if (stream.close) stream.close()
+  // Emit end and close events.
   stream.emit("end")
   stream.emit("close")
+
   return stream
 })
 
@@ -33,25 +39,27 @@ close.define(Stream, function(stream, value) {
 // so that they can be reduced as any other data structures
 // representing collections.
 accumulate.define(Stream, function(stream, next, initial) {
-  if (stream.readable === false) throw Error("Can reduce unreadable stream")
+  if (stream.readable === false) return next(end, initial)
   var result = initial
   var ended = false
 
-  function onerror(exception) {
-    // If stream errors, then it's broken and there is not much we can
-    // do other then propagate it through. But node streams are not guaranteed
-    // to stop after errors, they are like broken robots that may decide to
-    // take over the world :) To make sure this does not takes over reducers
-    // error recovery system we remove our listeners and try to kill it.
-    stream.removeListener("data")
-    stream.removeListener("end")
-    stream.removeListener("error")
-    // Reducers box values to indicate their intent, this also allows writing
-    // transformation functions that don't propagate values with a certain
-    // intents they don't deal with. `error` boxing function is used to wrap
-    // exception to indicate the error in the source being reduced.
-    next(error(exception), result)
+  function onerror(error) {
+    ended = true
+    // If stream errors (or ends) pass it to a consumer along with an
+    // accumulated result. If node streams error they are not guaranteed
+    // to stop, they are like broken robots that may decide to take over the
+    // world :D To make sure this does not takes over reducers error recovery
+    // system we remove our listeners and try to kill it.
+    stream.removeListener("data", ondata)
+    stream.removeListener("end", onend)
+    stream.removeListener("error", onerror)
+
+    next(error, result)
   }
+
+  // On end behaves exactly like on error with a difference that `end` of
+  // collection is passed instead of an error.
+  function onend() { onerror(end) }
 
   function ondata(data) {
     // Whenever there is a new chunk of data written into the stream,
@@ -59,34 +67,26 @@ accumulate.define(Stream, function(stream, next, initial) {
     // `result`.
     result = next(data, result)
     // If accumulator is done accumulating and no longer wishes to be called,
-    // it returns value boxed as `accumulated`. In reducers that intent
+    // it returns value boxed as `reduced`. In reducers that intent
     // propagates all the way through to the actual data source which is
     // supposed to stop and clean up, for example close a file description
     // it's being reading data from. In case of node, some streams may have
     // `close` method to do that. Some streams may have `pause` but not the
     // `close` method. There for we try first pausing stream and then closing.
-    // If all the above attempts don't end up calling an "end" event we give
-    // up and pretend that this happened by cleaning up listeners and by
-    // cheating accumulator stream is ended.
-    if (result && result.is === accumulated) {
+    // If non of the attempts will emit "end" event we give up and emit it
+    // manually to trigger listeners removal pretending that stream was ended.
+    if (isReduced(result)) {
+      result = result.value
       if (stream.pause) stream.pause()
       if (stream.close) stream.close()
+      if (!ended) stream.emit("end")
     }
-  }
-
-  function onend() {
-    // Once stream is ended we cleanup all the listeners so they don't leak
-    // and notify accumulator that stream is ended.
-    stream.removeListener("data", ondata)
-    stream.removeListener("error", onerror)
-    next(end(result), result)
   }
 
   // Finally hook up all the listeners to start reading.
   stream.on("error", onerror)
   stream.on("data", ondata)
   stream.once("end", onend)
-  return stream
 })
 
 module.exports = accumulate
