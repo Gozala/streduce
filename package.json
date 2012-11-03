@@ -4,7 +4,13 @@
   "version": "0.1.0",
   "description": "Adapter for making node streams reducible",
   "keywords": [
-    "stream", "reduce", "reducers", "map", "filter", "transform", "lazy",
+    "stream",
+    "reduce",
+    "reducers",
+    "map",
+    "filter",
+    "transform",
+    "lazy",
     "adapter"
   ],
   "author": "Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)",
@@ -33,6 +39,6 @@
     }
   ],
   "dependencies": {
-    "reducers": "git://github.com/Gozala/reducers.git#experiment/future"
+    "reducers": "~1.0.0"
   }
 }
