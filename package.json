@@ -28,7 +28,7 @@
     "repl-utils": "~2.0.1",
     "reducers": "~2.0.0"
   },
-  "main": "./stream-reduce.js",
+  "main": "./stream.js",
   "scripts": {
     "test": "node test/index.js",
     "repl": "node node_modules/repl-utils",
