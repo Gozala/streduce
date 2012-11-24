@@ -1,8 +1,8 @@
 "use strict";
 
-require("../stream-reduce")
+var Stream = require("../stream-reduce")
 
-var reduce = require("reducers/reduce")
+var fold = require("reducers/fold")
 var expand = require("reducers/expand")
 var map = require("reducers/map")
 var take = require("reducers/take")
@@ -14,7 +14,7 @@ var fixtures = path.join(path.dirname(module.filename), "fixtures")
 exports["test reduce on read-stream"] = function(assert, done) {
   var oops = path.join(fixtures, "oops.md")
   var stream = fs.createReadStream(oops)
-  reduce(stream, function(_, data) {
+  fold(stream, function(data) {
     assert.equal(data.toString(),
                  fs.readFileSync(oops).toString(),
                  "Assert that buffer read is the same")
@@ -35,7 +35,7 @@ exports["test transformations no read-stream"] = function(assert, done) {
       split("\n").
       slice(0, 5)
 
-  reduce(lines1_5, function(lines, line) {
+  fold(lines1_5, function(line, lines) {
     assert.equal(line, lines.shift(), "assert line #" + (5 - lines.length))
     if (!lines.length) done()
     return lines

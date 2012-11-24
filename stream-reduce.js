@@ -1,44 +1,18 @@
 "use strict";
 
 var Stream = require("stream")
-var accumulate = require("reducers/accumulate")
-var emit = require("reducers/emit")
-var close = require("reducers/close")
-var end = require("reducers/end")
-var isReduced = require("reducers/is-reduced")
+
+var reduce = require("reducible/reduce")
+var end = require("reducible/end")
+var isReduced = require("reducible/is-reduced")
 
 var accumulator = "accumulator@" + module.id
 var state = "state@" + module.id
 
-emit.define(Stream, function(stream, value) {
-  /**
-  Emits a new `value` on stream. If stream is no longer writable
-  return reduced to signal the source no value should be emitted.
-  **/
-  if (stream.writable === false) return reduced()
-  if (value === end) return close(stream)
-  stream.emit("data", value)
-  return stream
-})
-
-close.define(Stream, function(stream, value) {
-  /**
-  Close a `stream` preventing new values from being emitted.
-  Throws an exception if the signal is already closed.
-  **/
-  if (value) stream.emit("data", value)
-  if (stream.close) stream.close()
-  // Emit end and close events.
-  stream.emit("end")
-  stream.emit("close")
-
-  return stream
-})
-
 // Define implementation of `accumulate` for node streams
 // so that they can be reduced as any other data structures
 // representing collections.
-accumulate.define(Stream, function(stream, next, initial) {
+reduce.define(Stream, function(stream, next, initial) {
   if (stream.readable === false) return next(end, initial)
   var result = initial
   var ended = false
@@ -89,4 +63,4 @@ accumulate.define(Stream, function(stream, next, initial) {
   stream.once("end", onend)
 })
 
-module.exports = accumulate
+module.exports = Stream
