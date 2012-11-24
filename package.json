@@ -24,7 +24,7 @@
     "url": "http://github.com/Gozala/stream-reduce/issues/"
   },
   "devDependencies": {
-    "test": "~0.5.0",
+    "test": "~0.6.0",
     "repl-utils": "~2.0.1",
     "reducers": "~2.0.0"
   },
