@@ -13,7 +13,7 @@ that work with [reducers][] will work with node streams too.
 ```js
 var fs = require("fs")
 
-var reduce = require("reducers/reduce")
+var fold = require("reducers/fold")
 var expand = require("reducers/expand")
 var map = require("reducers/map")
 var take = require("reducers/take")
@@ -21,7 +21,7 @@ var drop = require("reducers/drop")
 
 // You need to import this, otherwise streams are treated as single
 // value sequences of that value.
-require("stream-reduce")
+var Stream = require("stream-reduce")
 
 
 var stream = fs.createReadStream("./package.json")
@@ -40,7 +40,7 @@ var linesFrom4 = drop(linesStream, 3)
 var lines56 = take(linesFrom4, 2)
 
 // Finally read print lines we're interested in:
-reduce(lines56, function(count, line) {
+fold(lines56, function(line, count) {
   console.log("line #" + (++count) + " " + line)
   return count
 }, 0)
