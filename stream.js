@@ -5,6 +5,7 @@ var Stream = require("stream")
 var reduce = require("reducible/reduce")
 var end = require("reducible/end")
 var isReduced = require("reducible/is-reduced")
+var WriteStream = require("write-stream")
 
 var accumulator = "accumulator@" + module.id
 var state = "state@" + module.id
@@ -13,7 +14,7 @@ var state = "state@" + module.id
 // so that they can be reduced as any other data structures
 // representing collections.
 reduce.define(Stream, function(stream, next, initial) {
-  if (stream.readable === false) return next(end, initial)
+  console.log("reducing")
   var result = initial
   var ended = false
 
@@ -24,7 +25,6 @@ reduce.define(Stream, function(stream, next, initial) {
     // to stop, they are like broken robots that may decide to take over the
     // world :D To make sure this does not takes over reducers error recovery
     // system we remove our listeners and try to kill it.
-    stream.removeListener("data", ondata)
     stream.removeListener("end", onend)
     stream.removeListener("error", onerror)
 
@@ -33,9 +33,11 @@ reduce.define(Stream, function(stream, next, initial) {
 
   // On end behaves exactly like on error with a difference that `end` of
   // collection is passed instead of an error.
-  function onend() { onerror(end) }
+  function onend() {
+    onerror(end)
+  }
 
-  function ondata(data) {
+  function write(data) {
     // Whenever there is a new chunk of data written into the stream,
     // accumulator function `next` is invoked with it and a accumulated
     // `result`.
@@ -59,8 +61,9 @@ reduce.define(Stream, function(stream, next, initial) {
 
   // Finally hook up all the listeners to start reading.
   stream.on("error", onerror)
-  stream.on("data", ondata)
   stream.once("end", onend)
+
+  stream.pipe(WriteStream(write))
 })
 
 module.exports = Stream
