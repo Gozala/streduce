@@ -26,9 +26,9 @@
   "devDependencies": {
     "test": "~0.6.0",
     "repl-utils": "~2.0.1",
-    "reducers": "~2.0.0"
+    "reducers": "~2.0.0",
+    "write-stream": "~0.4.3"
   },
-  "main": "./stream.js",
   "scripts": {
     "test": "node test/index.js",
     "repl": "node node_modules/repl-utils",
@@ -41,6 +41,7 @@
     }
   ],
   "dependencies": {
-    "reducible": "~1.0.1"
+    "reducible": "~1.0.1",
+    "read-stream": "~0.5.2"
   }
 }

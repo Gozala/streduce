@@ -53,6 +53,24 @@ that ary lazy and do work only after calling `reduce` on them, node streams
 are not. Things like `fs.createReadStream` start reading, that is also how
 transformations are applied by reducers library.
 
+### Stream
+
+Turn any reducible into a readable stream
+
+```js
+var stream = require("stream-reduce/stream")
+
+var s = stream([1,2,3])
+
+s.on("data", function () {
+  // 1, 2, 3
+})
+
+s.on("end", function () {
+  // fini!
+})
+```
+
 ## Install
 
     npm install stream-reduce

@@ -1,6 +1,6 @@
 "use strict";
 
-var Stream = require("../stream")
+var Stream = require("..")
 
 var fold = require("reducers/fold")
 var expand = require("reducers/expand")
