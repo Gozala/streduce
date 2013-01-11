@@ -1,5 +1,6 @@
-var fromArray = require("read-stream/array")
+"use strict";
 
+var fromArray = require("read-stream/array")
 var fold = require("reducers/fold")
 
 require("../stream")

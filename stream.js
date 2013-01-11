@@ -14,7 +14,6 @@ var state = "state@" + module.id
 // so that they can be reduced as any other data structures
 // representing collections.
 reduce.define(Stream, function(stream, next, initial) {
-  console.log("reducing")
   var result = initial
   var ended = false
 
@@ -33,9 +32,7 @@ reduce.define(Stream, function(stream, next, initial) {
 
   // On end behaves exactly like on error with a difference that `end` of
   // collection is passed instead of an error.
-  function onend() {
-    onerror(end)
-  }
+  function onend() { onerror(end) }
 
   function write(data) {
     // Whenever there is a new chunk of data written into the stream,
