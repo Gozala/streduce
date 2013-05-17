@@ -1,6 +1,6 @@
-# stream-reduce
+# streduce
 
-[![Build Status](https://secure.travis-ci.org/Gozala/stream-reduce.png)](http://travis-ci.org/Gozala/stream-reduce)
+[![Build Status](https://secure.travis-ci.org/Gozala/streduce.png)](http://travis-ci.org/Gozala/streduce)
 
 This library provides provides implementation of **reduce** abstraction defined
 by [reducers][] for streams. Which basically means that importing this library
@@ -21,7 +21,7 @@ var drop = require("reducers/drop")
 
 // You need to import this, otherwise streams are treated as single
 // value sequences of that value.
-var Stream = require("stream-reduce")
+var Stream = require("streduce")
 
 
 var stream = fs.createReadStream("./package.json")
@@ -55,6 +55,6 @@ transformations are applied by reducers library.
 
 ## Install
 
-    npm install stream-reduce
+    npm install streduce
 
 [reducers]:https://github.com/Gozala/reducers

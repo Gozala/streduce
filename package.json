@@ -1,7 +1,7 @@
 {
-  "name": "stream-reduce",
-  "id": "stream-reduce",
-  "version": "0.5.0",
+  "name": "streduce",
+  "id": "streduce",
+  "version": "0.6.0",
   "description": "Adapter for making node streams reducible",
   "keywords": [
     "stream",
@@ -14,14 +14,14 @@
     "adapter"
   ],
   "author": "Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)",
-  "homepage": "https://github.com/Gozala/stream-reduce",
+  "homepage": "https://github.com/Gozala/streduce",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Gozala/stream-reduce.git",
-    "web": "https://github.com/Gozala/stream-reduce"
+    "url": "https://github.com/Gozala/streduce.git",
+    "web": "https://github.com/Gozala/streduce"
   },
   "bugs": {
-    "url": "http://github.com/Gozala/stream-reduce/issues/"
+    "url": "http://github.com/Gozala/streduce/issues/"
   },
   "devDependencies": {
     "test": "~0.6.0",
@@ -38,7 +38,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/Gozala/stream-reduce/License.md"
+      "url": "https://github.com/Gozala/streduce/License.md"
     }
   ],
   "dependencies": {
