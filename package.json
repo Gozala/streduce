@@ -27,7 +27,7 @@
     "test": "~0.6.0",
     "repl-utils": "~2.0.1",
     "reducers": "~2.0.0",
-    "read-stream": "~0.5.2"
+    "read-stream": "~2.1.1"
   },
   "main": "./stream.js",
   "scripts": {
